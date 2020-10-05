@@ -20,7 +20,7 @@ def _create_image(image, color_divisor):
     output = ''
     for a in range(height):
         for b in range(width):
-            output += valcodes[round(_gs(image[a,b])/(4*color_divisor))*color_divisor]
+            output += valcodes[int(_gs(image[a,b])/(4*color_divisor))*color_divisor]
     return f'{height}|{width}|{_rle_encode(output)}'
 
 def parse_message(text):
