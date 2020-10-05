@@ -12,7 +12,7 @@ numbers = {value:key for key, value in valcodes.items()}
 def create_message(image, callsign, recipient, title, comment, color_divisor=1):
     if isinstance(image, str):
         image = cv2.imread(image)
-    return f'ARDIF001|{callsign}|{recipient}|{datetime.datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")}|{title}|{comment}|{_create_image(image, color_divisor)}'
+    return f'ARDIF001|{callsign}|{recipient}|{datetime.datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")}|{title}|{comment}|{_create_image(image, color_divisor)}|{callsign}'
 
 def _create_image(image, color_divisor):
     height = image.shape[0]
@@ -21,7 +21,7 @@ def _create_image(image, color_divisor):
     for a in range(height):
         for b in range(width):
             output += valcodes[round(_gs(image[a,b])/(4*color_divisor))*color_divisor]
-    return f'{height}|{width}|{_rle_encode(output)}|'
+    return f'{height}|{width}|{_rle_encode(output)}'
 
 def parse_message(text):
     header, sender, recipient, date, title, comment, height, width, image_data, _ = text.split('|')

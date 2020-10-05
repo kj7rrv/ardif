@@ -1,10 +1,10 @@
 # ARDIF v1 Specification
 
 ## General format
-Messages are composed of nine fields. In order, they are: header, sender
-callsign, recipient callsign, date, title, comment, height, width, and image
-data. Fields are separated by a vertical pipe (|), and a vertical pipe is
-appended at the end. There is no support for vertical pipes within any field.
+Messages are composed of ten fields. In order, they are: header, sender
+callsign, recipient callsign, date, title, comment, height, width, image data,
+and sender callsign (again). Fields are separated by a vertical pipe (`|`).
+Vertical pipes are not permitted in any field.
 
 ## Date
 Date is always UTC and is formatted as YYYY-MM-DD HH:MM:SS, using 24-hour
