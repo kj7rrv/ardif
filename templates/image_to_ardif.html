@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>ARDIF</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <style>
+* {
+    font-family: sans-serif;
+    color: white;
+    background-color: #222222;
+    font-family: monospace;
+}
+button {
+    background-color: #444444;
+    border: none;
+    margin: 5px;
+    box-shadow: 0px 0px 5px black;
+}
+button:hover {
+    box-shadow: 0px 0px 3px black;
+}
+        </style>
+    </head>
+    <body>
+        <h1>ARDIF Converter</h1>
+        <p>Length {{data_len}} bytes.</p>
+        <input type=text id=data value="{{data}}">
+        <button id=copy style='display: none'>Copy to clipboard</button><br>
+        <a href=/>Home</a>
+        <script>
+button = document.querySelector('#copy')
+input = document.querySelector('#data')
+button.style = ''
+input.style = 'display: none'
+button.addEventListener('click', function(e) {
+    e.preventDefault()
+    input.style = ''
+    input.select()
+    input.setSelectionRange(0, 9999999999999999)
+    document.execCommand("copy")
+    input.style = 'display: none'
+    }
+)
+        </script>
+    </body>
+</html>

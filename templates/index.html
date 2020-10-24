@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>ARDIF</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <style>
+#imagetoardif label {
+    width: 7em;
+    display: inline-block;
+}
+#image label {
+    width: 12em;
+}
+select {
+    margin: 0px;
+    padding: 0px;
+}
+form, form * {
+    background-color: #444444;
+}
+input {
+    background-color: #555555;
+    border: none;
+    margin: 2px;
+}
+button {
+    background-color: #555555;
+    border: none;
+    margin: 5px;
+    box-shadow: 0px 0px 5px black;
+}
+button:hover {
+    box-shadow: 0px 0px 3px black;
+}
+* {
+    font-family: monospace;
+    color: white;
+    background-color: #222222;
+}
+        </style>
+    </head>
+    <body>
+        <h1>ARDIF Converter</h1>
+        <section id=imagetoardif>
+            <h2>Image to ARDIF</h2>
+            <form method=POST action="/image_to_ardif" enctype="multipart/form-data">
+                <fieldset id=callsigns>
+                    <legend>Callsigns</legend>
+                    <label for=sender>Sender: </label><input type=text name=sender id=sender><br>
+                    <label for=recipient>Recipient: </label><input type=text name=recipient id=recipient><br>
+                </fieldset>
+                <fieldset id=info>
+                    <legend>Information</legend>
+                    <label for=title>Title: </label><input type=text name=title id=title><br>
+                    <label for=comment>Comment: </label><input type=text name=comment id=comment><br>
+                </fieldset>
+                <fieldset id=image>
+                    <legend>Image</legend>
+                    <label for=image>File: </label><input type=file name=image id=image><br>
+                    <label for=max_size>Maximum dimension: </label><input type=number value=0 name=max_size id=max_size><br>
+                    <label for=shades>Shades of gray: </label>
+                    <select name=shades id=shades>
+                        <option value=64>64</option>
+                        <option value=32>32</option>
+                        <option value=16>16</option>
+                        <option value=8>8</option>
+                        <option value=4>4</option>
+                        <option value=2>B&W</option>
+                    </select>
+                </fieldset>
+                <button>Convert</button>
+            </form>
+        </section>
+        <section>
+            <h2>ARDIF to Image</h2>
+            <form method=POST action="/ardif_to_image">
+                <label for=ardif>ARDIF: </label><input type=text id=ardif name=ardif><br>
+                <button>Convert</button>
+            </form>
+        </section>
+        <script>
+            sender = document.querySelector('#sender')
+            sender.value = localStorage.getItem('mycallsign') || ''
+            sender.addEventListener('change', function() {
+                localStorage.setItem('mycallsign', sender.value)
+            })
+        </script>
+    </body>
+</html>
