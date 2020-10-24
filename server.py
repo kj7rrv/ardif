@@ -60,5 +60,12 @@ def ardif_to_image():
             comment=data['comment'],
             uri=uri,
             ).replace('__next_part__', next_part)
+
+@app.route('/static/<file>')
+def static(fn):
+    print('warning: using the built in static server is not recommended')
+    if not '/' in fn and not '..' in fn:
+        with open(f'static/{fn}') as f:
+            return f.read()
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')
