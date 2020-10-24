@@ -1,0 +1,19 @@
+input {
+    background-color: #555555;
+    border: none;
+    margin: 2px;
+}
+button {
+    background-color: #555555;
+    border: none;
+    margin: 5px;
+    box-shadow: 0px 0px 5px black;
+}
+button:hover {
+    box-shadow: 0px 0px 3px black;
+}
+* {
+    font-family: monospace;
+    color: white;
+    background-color: #222222;
+}

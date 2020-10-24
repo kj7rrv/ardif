@@ -1,0 +1,17 @@
+#imagetoardif label {
+    width: 7em;
+    display: inline-block;
+}
+#image label {
+    width: 12em;
+}
+input {
+    background-color: #555555 !important;
+}
+select {
+    margin: 0px;
+    padding: 0px;
+}
+form, form * {
+    background-color: #444444;
+}
