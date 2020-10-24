@@ -174,12 +174,23 @@ button.addEventListener('click', function(e) {{
 
 @app.route('/ardif_to_image', methods=['POST'])
 def ardif_to_image():
-        with tempfile.TemporaryDirectory() as tmp:
-            data = ardif.parse_message(request.form['ardif'])
-            path = os.path.join(tmp, 'img.png')
-            cv2.imwrite(path, data['image'])
-            uri = datauri.DataURI.from_file(path)
-        return f'''<!DOCTYPE html>
+    portion_received = request.form.get('previous', '') + request.form['ardif']
+    data = ardif.parse_message(portion_received)
+    with tempfile.TemporaryDirectory() as tmp:
+        path = os.path.join(tmp, 'img.png')
+        cv2.imwrite(path, data['image'])
+        uri = datauri.DataURI.from_file(path)
+    next_part = ''
+    if not data['is_complete']:
+        portion_received_escaped = portion_received.replace('\\', '\\\\').replace('"', '\\"')
+        next_part = f'''
+<h2>Next portion</h2>
+<form method=post action="/ardif_to_image">
+    <input type=text name=ardif>
+    <button>Convert</button>
+    <input type=hidden name=previous value="{portion_received_escaped}">
+    </form>'''
+    return f'''<!DOCTYPE html>
 <html>
     <head>
         <title>ARDIF</title>
@@ -202,6 +213,20 @@ img {{
     display: block;
     padding: 3px;
 }}
+input {{
+    background-color: #555555;
+    border: none;
+    margin: 2px;
+}}
+button {{
+    background-color: #555555;
+    border: none;
+    margin: 5px;
+    box-shadow: 0px 0px 5px black;
+}}
+button:hover {{
+    box-shadow: 0px 0px 3px black;
+}}
 * {{
     font-family: sans-serif;
     color: white;
@@ -220,6 +245,7 @@ img {{
             <tr><th>Comment</th><td>{data['comment']}</td></tr>
         </table>
         <img src="{uri}"><br>
+        {next_part}
         <a href=/>Home</a>
     </body>
 </html>'''

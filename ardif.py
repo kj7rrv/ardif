@@ -3,10 +3,14 @@ import re
 import numpy as np
 import datetime
 
+class InsufficientDataError(Exception):
+    pass
+
 def _gs(pixel):
     return 0.229*pixel[2] + 0.587*pixel[1] + 0.114*pixel[0]
 
-valcodes = { number: letter for number, letter in enumerate('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz!@#$%^&*()_+') }
+valcodes = { number: letter for number, letter in enumerate('ABCDEFGHIJKLMNOPQR[TUVWXYZabcdefghijklmnopqr]tuvwxyz!@#$%^&*()_+') }
+# `[` and `]` are used in place of `S` and `s` so "SOS" cannot be accidentally transmitted.
 numbers = {value:key for key, value in valcodes.items()}
 
 def create_message(image, callsign, recipient, title, comment, color_divisor=1):
@@ -24,17 +28,39 @@ def _create_image(image, color_divisor):
     return f'{height}|{width}|{_rle_encode(output)}'
 
 def parse_message(text):
-    header, sender, recipient, date, title, comment, height, width, image_data, _ = text.split('|')
+    try:
+        header, sender, recipient, date, title, comment, height, width, image_data, _ = text.split('|')
+    except ValueError:
+        try:
+            header, sender, recipient, date, title, comment, height, width, image_data = text.split('|')
+        except ValueError:
+            raise InsufficientDataError('at least the header, sender, recipient, date, title, comment, height, width and part of the image data must be present')
     height = int(height)
     width = int(width)
     image_data = _rle_decode(image_data)
     image = np.zeros((height, width, 3, ), np.uint8)
     i = 0
+    is_complete = True
     for a in range(height):
+        if not is_complete:
+            break
+
         for b in range(width):
-            image[a, b] = ( numbers[image_data[i]]*4, ) * 3
+            try:
+                image[a, b] = ( numbers[image_data[i]]*4, ) * 3
+            except IndexError:
+                is_complete = False
+                break
             i += 1
-    return {'sender': sender, 'recipient':recipient, 'date': date, 'title': title, 'comment': comment, 'image': image, }
+    return {
+            'sender': sender,
+            'recipient': recipient,
+            'date': date,
+            'title': title,
+            'comment': comment,
+            'image': image,
+            'is_complete': is_complete
+            }
 
 def _rle_encode(text):
     strings = [[text[0], 1]]
@@ -62,7 +88,10 @@ def _rle_decode(text):
     while len(lexed) != 0:
         item = lexed.pop(0)
         if isinstance(item, int):
-            output += lexed.pop(0)*item
+            try:
+                output += lexed.pop(0)*item
+            except IndexError:
+                return output
         else:
             output += item
     return output
