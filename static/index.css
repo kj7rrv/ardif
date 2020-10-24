@@ -5,6 +5,9 @@
 #image label {
     width: 12em;
 }
+label#block_label {
+    width: auto;
+}
 input {
     background-color: #555555 !important;
 }

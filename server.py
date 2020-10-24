@@ -3,10 +3,12 @@ from werkzeug.utils import secure_filename
 import tempfile
 import os
 import subprocess
-app = Flask(__name__)
+import more_itertools
 import ardif
 import datauri
 import cv2
+
+app = Flask(__name__)
 
 @app.route('/')
 def home():
@@ -36,7 +38,18 @@ def image_to_ardif():
                     '2': 32,
                     }
             ardif_data = ardif.create_message(path, request.form['sender'], request.form['recipient'], request.form['title'], request.form['comment'], color_divisors[request.form['shades']])
-        return render_template('image_to_ardif.html', data_len=len(ardif_data), data=ardif_data)
+            block_section = ''
+            if request.form.get('block', '0') != '0':
+                blocks = list(more_itertools.sliced(ardif_data, int(request.form['block'])))
+                if len(blocks) > 1:
+                    block_section = '<h2>Blocks</h2><div id=blocks>'
+                    for block_id, block in enumerate(blocks):
+                        block_section += render_template('block.html', number=block_id+1, data=block)
+                    block_section += '</div>'
+        return render_template('image_to_ardif.html',
+                data_len=len(ardif_data),
+                data=ardif_data
+                ).replace('__block_section__', block_section)
         
 
 @app.route('/ardif_to_image', methods=['POST'])
