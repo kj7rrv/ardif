@@ -28,6 +28,7 @@ def _create_image(image, color_divisor):
     return f'{height}|{width}|{_rle_encode(output)}'
 
 def parse_message(text):
+    text = text.strip()
     try:
         header, sender, recipient, date, title, comment, height, width, image_data, _ = text.split('|')
     except ValueError:
