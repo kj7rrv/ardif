@@ -80,6 +80,8 @@ def _rle_encode(text):
 def _rle_decode(text):
     lexed = [int(text[0]) if text[0] in '0123456789' else text[0]]
     for char in text[1:]:
+        if char in ' \n\t':
+            continue
         if isinstance(lexed[-1], int) and char in '0123456789':
             lexed[-1] = int(str(lexed[-1]) + char)
         else:
