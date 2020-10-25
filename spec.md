@@ -27,10 +27,10 @@ rows concatenated. Each pixel has a shade of gray, represented by a number
 from 0 to 63, inclusive; 0 is black and 63 is white. The following characters,
 in sequence, are used to represent numbers 0 through 63:
 
-    ABCDEFGHIJKLMNOPQR[TUVWXYZabcdefghijklmnopqr]tuvwxyz!@#$%^*()_+
+    ABCDEFGHIJKLMNOPQR[TUVWXYZabcdefghijklmnopqr]tuvwxyz!@#$%^.*()_+
 
-`S` and `s` are replaced by `[` and `]`, respectively, to avoid having the
-string `SOS` in the file.
+The sequence is mostly logical, based on either the alphabet or the QWERTY
+keyboard. However, some characters are replaced for various technical reasons.
 
 ### Compression (Run-length encoding)
 Digits within an image data string are treated specially. They, as a decimal

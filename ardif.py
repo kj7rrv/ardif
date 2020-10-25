@@ -9,8 +9,7 @@ class InsufficientDataError(Exception):
 def _gs(pixel):
     return 0.229*pixel[2] + 0.587*pixel[1] + 0.114*pixel[0]
 
-valcodes = { number: letter for number, letter in enumerate('ABCDEFGHIJKLMNOPQR[TUVWXYZabcdefghijklmnopqr]tuvwxyz!@#$%^&*()_+') }
-# `[` and `]` are used in place of `S` and `s` so "SOS" cannot be accidentally transmitted.
+valcodes = { number: letter for number, letter in enumerate('ABCDEFGHIJKLMNOPQR[TUVWXYZabcdefghijklmnopqr]tuvwxyz!@#$%^.*()_+') }
 numbers = {value:key for key, value in valcodes.items()}
 
 def create_message(image, callsign, recipient, title, comment, color_divisor=1):
