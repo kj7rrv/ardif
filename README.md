@@ -1,6 +1,10 @@
 # ARDIF
 Amateur Radio Digital Image Format - Experimental ham radio image format
 
+## ARCHIVED
+I'm not working on ARDIF anymore. Other modes such as SSTV, DRM, and MFSK Image seem to work better.
+In the future I will make a digital fax mode for printed documents.
+
 ## Spec
 See [spec.md](spec.md)
 
